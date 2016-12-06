@@ -4,6 +4,7 @@ import sys
 import flask_admin
 from flask import Flask
 from flask import url_for
+from flask_debugtoolbar import DebugToolbarExtension
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_mail import Mail

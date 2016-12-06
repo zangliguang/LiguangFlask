@@ -46,6 +46,7 @@ class Config:
 class DevelopmentConfig(Config):
     # 该环境下特有配置，省略
     DEBUG = True
+    DEBUG_TB_INTERCEPT_REDIRECTS = False;
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
     SQLALCHEMY_ECHO = True
@@ -54,6 +55,7 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     # 该环境下特有配置，省略
     TESTING = True
+    DEBUG_TB_INTERCEPT_REDIRECTS = False;
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
     SQLALCHEMY_ECHO = True
@@ -61,6 +63,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     # 该环境下特有配置，省略
+    DEBUG_TB_INTERCEPT_REDIRECTS = True;
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 
