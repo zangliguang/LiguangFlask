@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
+import os.path as op
 import sys
 
 import flask_admin
 from flask import Flask
 from flask import url_for
-from flask_debugtoolbar import DebugToolbarExtension
+from flask_admin import helpers as admin_helpers
+from flask_admin.contrib import fileadmin
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -17,7 +20,6 @@ from app.users.models import Role, db
 from app.users.models import User
 from app.users.modelview import UserAdmin, CustomView, MyModelView
 from config import config
-from flask_admin import helpers as admin_helpers
 
 defaultencoding = 'utf-8'
 if sys.getdefaultencoding() != defaultencoding:
@@ -32,10 +34,11 @@ pagedown = PageDown()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+path = op.join(op.dirname(__file__), 'upload_files')
 
 
 def create_app(config_name):
-    app = Flask(__name__, template_folder='users/templates')
+    app = Flask(__name__, template_folder='users/templates', static_folder='upload_files')
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
@@ -70,6 +73,14 @@ def create_app(config_name):
     # Add model views
     admin.add_view(MyModelView(Role, db.session))
     admin.add_view(MyModelView(User, db.session))
+
+    if not os.path.exists(path):
+        try:
+            os.mkdir(path)
+        except OSError:
+            pass
+
+    admin.add_view(fileadmin.FileAdmin(path, '/upload_files/', name='Files'))
 
     # define a context processor for merging flask-admin's template context into the
     # flask-security views.
